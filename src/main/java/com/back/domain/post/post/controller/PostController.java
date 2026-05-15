@@ -22,11 +22,6 @@ import java.util.stream.Collectors;
 public class PostController {
     private final PostService postService;
 
-    @GetMapping("/posts/write")
-    public String write() {
-        return "post/post/write";
-    }
-
     @AllArgsConstructor
     @Getter
     public static class WriteForm {
@@ -36,6 +31,11 @@ public class PostController {
         @NotBlank(message = "3-내용을 입력해주세요.")
         @Size(min = 2, max = 20, message = "4-내용은 2자 이상, 20자 이하로 입력가능합니다.")
         private String content;
+    }
+
+    @GetMapping("/posts/write")
+    public String showWrite(WriteForm form) {
+        return "post/post/write";
     }
 
     @PostMapping("/posts/doWrite")
@@ -54,6 +54,8 @@ public class PostController {
                     .map(field -> "<!--%s--><li data-error-field-name=\"%s\">%s</li>".formatted(field[1], field[0], field[2]))
                     .sorted()
                     .collect(Collectors.joining("\n"));
+
+            model.addAttribute("errorMessage", errorMessage);
 
             return "post/post/write";
         }
