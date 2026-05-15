@@ -9,11 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -36,7 +33,9 @@ public class PostController {
             String content
     ) {
         return """
-                <div style="color: red;">%s</div>
+                <ul style="color: red;">
+                  %s
+                </ul>
                 
                 <form method="POST" action="doWrite">
                   <input type="text" name="title" placeholder="제목" value="%s" autofocus>
@@ -87,14 +86,15 @@ public class PostController {
             BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
+
             String errorFieldName = "title";
+
             String errorMessage = bindingResult
                     .getFieldErrors()
                     .stream()
-                    .map(FieldError::getDefaultMessage)
-                    .sorted()
-                    .map(message -> message.split("-", 2)[1])
-                    .collect(Collectors.joining("<br>"));
+                    .map(fieldError -> (fieldError.getField() + "-" + fieldError.getDefaultMessage()).split("-", 3))
+                    .map(field -> "<!--%s--><li data-error-field-name=\"%s\">%s</li>".formatted(field[1], field[0], field[2]))
+                    .collect(Collectors.joining("\n"));
 
             return getWriteFormHtml(errorFieldName, errorMessage, form.getTitle(), form.getContent());
         }
