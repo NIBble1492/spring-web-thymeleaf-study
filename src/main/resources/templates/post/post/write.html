@@ -2,7 +2,8 @@
 
 <form method="POST" action="doWrite" th:object="${form}">
     <ul th:if="${#fields.hasAnyErrors()}" style="color: red;">
-        <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+        <li th:each="err : ${#fields.allErrors().stream().sorted()}" th:text="${err.split('-', 2)[1]}"
+            style="color: red;"/>
     </ul>
     <div>
         <label for="title">제목</label><br>
