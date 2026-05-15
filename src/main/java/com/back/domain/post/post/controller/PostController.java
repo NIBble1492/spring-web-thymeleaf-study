@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-import java.util.stream.Collectors;
-
 @Controller
 @RequiredArgsConstructor
 public class PostController {
@@ -44,7 +42,7 @@ public class PostController {
         return "post/post/write";
     }
 
-    @PostMapping("/posts/doWrite")
+    @PostMapping("/posts/write")
     @Transactional
     public String doWrite(
             @ModelAttribute("form") @Valid WriteForm form,
