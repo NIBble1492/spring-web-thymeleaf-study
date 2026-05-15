@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -34,14 +35,14 @@ public class PostController {
     }
 
     @GetMapping("/posts/write")
-    public String showWrite(WriteForm form) {
+    public String showWrite(@ModelAttribute("form") WriteForm form) {
         return "post/post/write";
     }
 
     @PostMapping("/posts/doWrite")
     @Transactional
     public String doWrite(
-            @Valid WriteForm form,
+            @ModelAttribute("form") @Valid WriteForm form,
             BindingResult bindingResult,
             Model model
     ) {
